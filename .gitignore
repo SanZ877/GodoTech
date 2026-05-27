@@ -1,0 +1,17 @@
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Node.js
+node_modules/
+package-lock.json
+
+# Python
+__pycache__/
+*.pyc
+
+# IDE & OS
+.vscode/
+.DS_Store
+*.log

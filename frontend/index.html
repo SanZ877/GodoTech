@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>GodoTech</title>
+    <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+<div class="window">
+
+    <div class="sidebar">
+        <div class="logo">
+            <img src="GodoTech.png" width="80px" height="80px"/>
+            GodoTech
+        </div>
+
+        <a href="#" class="nav-link active" data-page="dashboard">Dashboard</a>
+        <a href="#" class="nav-link" data-page="my-projects">My Projects</a>
+        <a href="#" class="nav-link" data-page="matchmaking">Match Making</a>
+        <a href="#" class="nav-link" data-page="event-hub">Event Hub</a>
+        <a href="#" class="nav-link" data-page="forums">Forums</a>
+        <div style="flex-grow: 1;"></div>
+
+        <a href="#" class="nav-link" data-page="settings">Settings</a>
+    </div>
+
+    <div class="main-content">
+        <div id="page-dashboard" class="page active">
+        <div class="header">
+
+                <h1>Selamat Datang, User!</h1>
+            <input type="text" class="search-bar" placeholder="Cari Proyek, Talent, atau Aset...">
+        </div>
+
+        <div class="section-title">Kelola Proyek Anda (Cari Tim)</div>
+        <div class="project-grid">
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                    <h3>"Project Aethelgard"</h3>
+                    <span class="status-tag">Butuh Anggota</span>
+                </div>
+                <p style="font-size: 14px; color: #AAA;">Genre: RPG. Status: Mangkrak (Kurang Programmer).</p>
+                <button class="btn">+ Rekrut</button>
+            </div>
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                    <h3>"Retro Platformer"</h3>
+                    <span class="status-tag" style="color: lightgreen; background-color: rgba(144,238,144,0.1);">Aktif</span>
+                </div>
+                <p style="font-size: 14px; color: #AAA;">Genre: 2D. Status: MVP.</p>
+            </div>
+        </div>
+
+        <div class="section-title">Talent Matchmaking (Junior - Senior)</div>
+        <div class="talent-list">
+            <div class="talent-item">
+                <div class="avatar-placeholder"></div>
+                <div>
+                    <div>Alexi R.</div>
+                    <div class="badge-dev">Senior Programmer</div>
+                </div>
+                <div style="text-align: right;">[Lihat Profil]</div>
+            </div>
+            <div class="talent-item">
+                <div class="avatar-placeholder"></div>
+                <div>
+                    <div>Kyla W.</div>
+                    <div class="badge-art">Intermediate Artist</div>
+                </div>
+                <div style="text-align: right;">[Lihat Profil]</div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+        <div id="page-my-projects" class="page">
+            <h1>Proyek Saya</h1>
+            <button class="btn">+ Proyek Baru</button>
+            <div class="project-grid"></div>
+                </div>
+
+
+
+
+
+
+
+        <div id="page-matchmaking" class="page">
+            <h1>Matchmaking</h1>
+            <div class="filters">
+                <button class="btn">Programmer</button>
+                <button class="btn">Artist 2D</button>
+                <button class="btn">Artist 3D</button>
+            </div>
+            <div class="talent-list"></div>
+                </div>
+
+        <div id="page-settings" class="page">
+            <h1>Pengaturan Profil</h1>
+            <p>Status Kemahiran: <span id="user-rank">Beginner</span></p>
+            </div>
+        </div>
+        
+
+
+    <div class="right-panel">
+        <div class="panel-block">
+            <h3>Event Berikutnya (Otomatis)</h3>
+            <div class="event-item">
+                <div class="event-date">15<span style="font-size: 10px;">MEI</span></div>
+                <div>
+                    <div>Godot Game Jam 2026</div>
+                    <div style="font-size: 12px; color: #AAA;">100+ Peserta</div>
+        </div>
+    </div>
+
+            <div class="event-item">
+                <div class="event-date">22<span style="font-size: 10px;">MEI</span></div>
+                <div>
+                    <div>Workshop Blender</div>
+                    <div style="font-size: 12px; color: #AAA;">Online</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+            </div>
+
+
+
+
+
+
+
+
+
+
+
+        </div>
+
+        <div class="panel-block" style="text-align: center;">
+            <button class="btn" style="background-color: #00FFFF; color: #000;">Buat Proyek Baru</button>
+        </div>
+    </div>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
