@@ -47,6 +47,7 @@
         .main-content {
             background-color: #000; padding: 30px;
             overflow-y: auto;
+            width: 60%;
         }
 
         .header {
