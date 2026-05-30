@@ -15,13 +15,50 @@ document.querySelectorAll('.nav-link').forEach(link => {
 });
 
 // Chat Logic
-async function sendMessage() {
-    const input = document.getElementById('chat-input');
-    if (!input.value) return;
-    // Logika pengiriman API bisa ditambahkan di sini
-    console.log("Mengirim:", input.value);
-    input.value = '';
+let currentRoom = 'global';
+async function loadMessages() {
+    const chatContainer = document.getElementById('chat-messages');
+    if (!chatContainer) return;
+
+    const res = await fetch(`http://localhost:3000/messages/${currentRoom}`);
+    const messages = await res.json();
+
+    chatContainer.innerHTML = messages.map(m => `
+        <div class="msg ${m.user_id == localStorage.getItem('userId') ? 'right' : 'left'}-msg">
+            <div class="msg-bubble">
+                <div class="msg-info">
+                    <div class="msg-info-name">${m.username}</div>
+                    <div class="msg-info-time">${new Date(m.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
+                </div>
+                <div class="msg-text">${m.content}</div>
+            </div>
+        </div>
+    `).join('');
+    chatContainer.scrollTop = chatContainer.scrollHeight;
 }
+
+function changeRoom(roomId) {
+    currentRoom = roomId;
+    loadMessages();
+}
+
+document.getElementById('chat-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const input = document.getElementById('chat-input');
+    const content = input.value;
+    if (!content) return;
+
+    await fetch('http://localhost:3000/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: localStorage.getItem('userId'), roomId: currentRoom, content })
+    });
+    input.value = '';
+    loadMessages();
+});
+
+// Refresh chat periodically
+setInterval(loadMessages, 3000);
 
 // Kemahiran Logic
 function updateRank(projectCount) {
@@ -29,7 +66,7 @@ function updateRank(projectCount) {
     let rank = "Beginner";
     if (projectCount > 10) rank = "Expert";
     else if (projectCount > 3) rank = "Intermediate";
-    
+
     rankEl.innerText = rank;
     rankEl.className = `status-tag badge-${rank.toLowerCase()}`;
 }

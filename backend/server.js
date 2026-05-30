@@ -37,6 +37,21 @@ db.serialize(() => {
         status TEXT
     )`);
 
+    db.run(`CREATE TABLE IF NOT EXISTS messages (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER,
+        room_id TEXT DEFAULT 'global',
+        content TEXT,
+        timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+    )`);
+
+    db.run(`CREATE TABLE IF NOT EXISTS rooms (
+        id TEXT PRIMARY KEY,
+        name TEXT
+    )`);
+
+    db.run(`INSERT OR IGNORE INTO rooms (id, name) VALUES ('global', 'Global'), ('programmer', 'Programmer'), ('artist', 'Artist')`);
+
     // Check if sample data exists, if not, add it
     db.get(`SELECT COUNT(*) as count FROM users`, (err, row) => {
         if (row.count < 5) {
@@ -93,6 +108,22 @@ app.get('/matchmaking/:role', (req, res) => {
     db.all(`SELECT id, username, role, skill_level FROM users WHERE role LIKE ?`, [role], (err, rows) => {
         if (err) return res.status(500).json({ error: err.message });
         res.json(rows);
+    });
+});
+
+// Chat APIs
+app.get('/messages/:roomId', (req, res) => {
+    db.all(`SELECT m.*, u.username FROM messages m JOIN users u ON m.user_id = u.id WHERE m.room_id = ? ORDER BY m.timestamp ASC`, [req.params.roomId], (err, rows) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json(rows);
+    });
+});
+
+app.post('/messages', (req, res) => {
+    const { userId, roomId, content } = req.body;
+    db.run(`INSERT INTO messages (user_id, room_id, content) VALUES (?, ?, ?)`, [userId, roomId, content], function(err) {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json({ id: this.lastID });
     });
 });
 

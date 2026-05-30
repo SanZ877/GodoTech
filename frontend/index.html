@@ -108,9 +108,28 @@
         <div id="page-settings" class="page">
             <h1>Pengaturan Profil</h1>
             <p>Status Kemahiran: <span id="user-rank">Beginner</span></p>
-            </div>
         </div>
 
+            
+            <div id="page-chat" class="page">
+                <div class="header"><h1>Chat Room</h1></div>
+                <select id="room-selector" onchange="changeRoom(this.value)">
+                <option value="global">Global</option>
+                <option value="programmer">Programmer</option>
+                <option value="artist">Artist</option>
+            </select>
+            <div class="msger" id="chat-window">
+                <header class="msger-header"><div class="msger-header-title">Chat</div></header>
+                <main class="msger-chat" id="chat-messages"></main>
+                <form class="msger-inputarea" id="chat-form">
+                    <input type="text" class="msger-input" id="chat-input" placeholder="Enter message...">
+                    <button type="submit" class="msger-send-btn">Send</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+        
 
 
     <div class="right-panel">
@@ -141,6 +160,7 @@
 
 </div>
 
+        
 <script src="script.js"></script>
 </body>
 </html>
