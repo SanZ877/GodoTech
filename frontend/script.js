@@ -34,26 +34,122 @@ function updateRank(projectCount) {
     rankEl.className = `status-tag badge-${rank.toLowerCase()}`;
 }
 
-// Initial Data Fetch
-async function init() {
-    try {
-        const response = await fetch('http://localhost:3000/users');
-        const users = await response.json();
+async function handleLogin() {
+    const user = document.getElementById('login-user').value;
+    const pass = document.getElementById('login-pass').value;
+    const res = await fetch('http://localhost:3000/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: user, password: pass })
+    });
 
-        const talentContainer = document.getElementById('matchmaking-list');
-        talentContainer.innerHTML = users.map(user => `
-            <div class="talent-item">
-                <div class="avatar-placeholder"></div>
-                <div>
-                    <div>${user.username}</div>
-                    <div class="badge-${user.skill_level.toLowerCase()}">${user.skill_level}</div>
-                </div>
-            </div>
-        `).join('');
-    } catch (error) {
-        console.error("Gagal mengambil data dari API:", error);
+    if (res.ok) {
+        const data = await res.json();
+        localStorage.setItem('userId', data.userId);
+        document.getElementById('page-login').style.display = 'none';
+        document.getElementById('main-app').style.display = 'flex';
+        init();
+    } else {
+        alert("Login Gagal!");
     }
 }
 
+// Initial Data Fetch
+async function init() {
+    const userId = localStorage.getItem('userId');
+    if (!userId) return;
+
+    document.getElementById('page-login').style.display = 'none';
+    document.getElementById('main-app').style.display = 'flex';
+
+    loadProjects();
+    loadMatchmaking('all');
+}
+
+// Render Projects di Dashboard
+async function loadProjects() {
+    const container = document.getElementById('dashboard-projects');
+    if (!container) return; // Mencegah error jika elemen tidak ditemukan
+    try {
+        const res = await fetch('http://localhost:3000/projects');
+        const projects = await res.json();
+        container.innerHTML = projects.map(p => `
+            <div class="card">
+                <h3>${p.title}</h3>
+                <p>${p.description}</p>
+                <small>By: ${p.username}</small>
+            </div>
+    `).join('');
+    } catch (err) {
+        console.error("Gagal load project:", err);
+}
+}
+
+// Render Matchmaking dengan Filter
+async function loadMatchmaking(role = 'all') {
+    const container = document.getElementById('matchmaking-list');
+    if (!container) return; // Mencegah error jika elemen tidak ditemukan
+
+    try {
+        const res = await fetch(`http://localhost:3000/matchmaking/${role}`);
+        const talents = await res.json();
+
+        if (talents.length === 0) {
+            container.innerHTML = "<p>Belum ada talent.</p>";
+            return;
+        }
+
+        container.innerHTML = talents.map(t => `
+            <div class="talent-item">
+                <div class="avatar-placeholder"></div>
+                <div>
+                    <div>${t.username}</div>
+                    <div class="status-tag">${t.role}</div>
+                    <div class="badge-${t.skill_level.toLowerCase()}">${t.skill_level}</div>
+                </div>
+            </div>
+    `).join('');
+    } catch (err) {
+        console.error("Gagal load matchmaking:", err);
+    }
+}
+
+// Tambahkan event listener untuk tombol filter
+document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => loadMatchmaking(btn.dataset.role));
+});
+
 init();
+
+db.serialize(() => {
+    // Pastikan tabel ada
+    db.run(`CREATE TABLE IF NOT EXISTS users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        username TEXT,
+        email TEXT,
+        skill_level TEXT,
+        project_title TEXT
+    )`);
+
+    // Tambahkan kolom jika belum ada (mengabaikan error jika kolom sudah ada)
+    const columns = ['password', 'role', 'project_count'];
+    columns.forEach(col => {
+        db.run(`ALTER TABLE users ADD COLUMN ${col} TEXT`, (err) => {
+            if (err) console.log(`Kolom ${col} mungkin sudah ada atau terjadi kesalahan.`);
+        });
+    });
+
+    // Update data sampel setelah kolom dipastikan ada
+    db.get(`SELECT COUNT(*) as count FROM users`, (err, row) => {
+        if (row && row.count < 5) {
+            const stmt = db.prepare(`INSERT OR IGNORE INTO users (username, email, skill_level, project_title, password, role, project_count) VALUES (?, ?, ?, ?, ?, ?, ?)`);
+            stmt.run("GodotNewbie", "newbie@example.com", "Beginner", "First Platformer", "123", "Programmer", 1);
+            stmt.run("Artist2D", "art2d@godotech.com", "Beginner", "Pixel Art Pack", "123", "2D Artist", 1);
+            stmt.run("Artist3D", "art3d@godotech.com", "Intermediate", "Low Poly Assets", "123", "3D Artist", 5);
+            stmt.run("SoundDev", "sound@godotech.com", "Expert", "Godot SFX", "123", "Sound Designer", 12);
+            stmt.finalize();
+            console.log("Sample users updated/inserted.");
+        }
+    });
+});
 

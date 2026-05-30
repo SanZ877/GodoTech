@@ -7,8 +7,16 @@
 </head>
 <body>
 
-<div class="window">
+<div id="page-login" class="page active">
+    <div class="login-container">
+        <h1>GodoTech Login</h1>
+        <input type="text" id="login-user" placeholder="Username">
+        <input type="password" id="login-pass" placeholder="Password (default: 123)">
+        <button class="btn" onclick="handleLogin()">Login</button>
+    </div>
+</div>
 
+<div class="window" id="main-app" style="display: none;">
     <div class="sidebar">
         <div class="logo">
             <img src="GodoTech.png" width="80px" height="80px"/>
@@ -34,7 +42,7 @@
         </div>
 
         <div class="section-title">Kelola Proyek Anda (Cari Tim)</div>
-        <div class="project-grid">
+        <div class="project-grid" id="dashboard-projects">
             <div class="card">
                 <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
                     <h3>"Project Aethelgard"</h3>
@@ -73,14 +81,6 @@
         </div>
     </div>
 
-
-
-
-
-
-
-
-
         <div id="page-my-projects" class="page">
             <h1>Proyek Saya</h1>
             <button class="btn">+ Proyek Baru</button>
@@ -96,11 +96,12 @@
         <div id="page-matchmaking" class="page">
             <h1>Matchmaking</h1>
             <div class="filters">
-                <button class="btn">Programmer</button>
-                <button class="btn">Artist 2D</button>
-                <button class="btn">Artist 3D</button>
+                <!-- Pastikan class-nya .filter-btn -->
+                <button class="btn filter-btn" data-role="all">All</button>
+                <button class="btn filter-btn" data-role="Programmer">Programmer</button>
+                <button class="btn filter-btn" data-role="2D Artist">2D Artist</button>
             </div>
-            <div class="talent-list"></div>
+            <div class="talent-list" id="matchmaking-list"></div>
                 </div>
 
         <div id="page-settings" class="page">
@@ -108,7 +109,7 @@
             <p>Status Kemahiran: <span id="user-rank">Beginner</span></p>
             </div>
         </div>
-        
+
 
 
     <div class="right-panel">
@@ -128,28 +129,7 @@
                     <div>Workshop Blender</div>
                     <div style="font-size: 12px; color: #AAA;">Online</div>
 </div>
-
-
-
-
-
-
-
-
-
-
-
             </div>
-
-
-
-
-
-
-
-
-
-
 
         </div>
 
