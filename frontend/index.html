@@ -9,12 +9,53 @@
 
 <div id="page-login" class="page active">
     <div class="login-container">
-        <h1>GodoTech Login</h1>
-        <input type="text" id="login-user" placeholder="Username">
-        <input type="password" id="login-pass" placeholder="Password (default: 123)">
-        <button class="btn" onclick="handleLogin()">Login</button>
+        <div class="container">
+            <!-- Login Form -->
+            <div class="form-box login">
+                <form id="login-form">
+                    <h1>Login</h1>
+                    <div class="input-box"><input type="text" id="login-user" placeholder="Username" required><i class='bx bxs-user'></i></div>
+                    <div class="input-box"><input type="password" id="login-pass" placeholder="Password" required><i class='bx bxs-lock-alt'></i></div>
+                    <button type="button" class="btn" onclick="handleLogin()">Login</button>
+                </form>
+            </div>
+            <!-- Register Form -->
+            <div class="form-box register">
+                <form id="register-form">
+                    <h1>Registration</h1>
+                    <div class="input-box"><input type="text" id="reg-user" placeholder="Username" required><i class='bx bxs-user'></i></div>
+                    <div class="input-box"><input type="email" id="reg-email" placeholder="Email" required><i class='bx bxs-envelope'></i></div>
+                    <div class="input-box"><input type="password" id="reg-pass" placeholder="Password" required><i class='bx bxs-lock-alt'></i></div>
+                    <div class="input-box">
+                        <select id="reg-role" style="width:100%; padding:13px; background:#333; color:#fff; border:none; border-radius:8px;">
+                            <option value="Programmer">Programmer</option>
+                            <option value="2D Artist">2D Artist</option>
+                            <option value="3D Artist">3D Artist</option>
+                            <option value="Game Designer">Game Designer</option>
+                            <option value="Sound Designer">Sound Designer</option>
+            </select>
+            </div>
+                    <button type="submit" class="btn">Register</button>
+                </form>
+        </div>
+            <!-- Toggle Box -->
+            <div class="toggle-box">
+                <div class="toggle-panel toggle-left">
+                    <img class="logo-login" src="godotech_community.png" width="35%"/>
+                    <h1>Welcome Back!</h1>
+                    <p>Don't have an account?</p>
+                    <button class="btn register-btn">Register</button>
+                </div>
+                <div class="toggle-panel toggle-right">
+                    <img class="logo-login" src="godotech_community.png" width="35%"/>
+                    <h1>Hello, Welcome!</h1>
+                    <p>Already have an account?</p>
+                    <button class="btn login-btn">Login</button>
+        </div>
     </div>
 </div>
+            </div>
+        </div>
 
 <div class="window" id="main-app" style="display: none;">
     <div class="sidebar">
@@ -40,7 +81,7 @@
 
                 <h1>Selamat Datang, User!</h1>
             <input type="text" class="search-bar" placeholder="Cari Proyek, Talent, atau Aset...">
-        </div>
+</div>
 
         <div class="section-title">Kelola Proyek Anda (Cari Tim)</div>
         <div class="project-grid" id="dashboard-projects">
@@ -48,15 +89,15 @@
                 <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
                     <h3>"Project Aethelgard"</h3>
                     <span class="status-tag">Butuh Anggota</span>
-                </div>
+        </div>
                 <p style="font-size: 14px; color: #AAA;">Genre: RPG. Status: Mangkrak (Kurang Programmer).</p>
                 <button class="btn">+ Rekrut</button>
-            </div>
+    </div>
             <div class="card">
                 <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
                     <h3>"Retro Platformer"</h3>
                     <span class="status-tag" style="color: lightgreen; background-color: rgba(144,238,144,0.1);">Aktif</span>
-                </div>
+</div>
                 <p style="font-size: 14px; color: #AAA;">Genre: 2D. Status: MVP.</p>
             </div>
         </div>
@@ -88,12 +129,6 @@
             <div class="project-grid"></div>
                 </div>
 
-
-
-
-
-
-
         <div id="page-matchmaking" class="page">
             <h1>Matchmaking</h1>
             <div class="filters">
@@ -106,11 +141,14 @@
                 </div>
 
         <div id="page-settings" class="page">
-            <h1>Pengaturan Profil</h1>
-            <p>Status Kemahiran: <span id="user-rank">Beginner</span></p>
+            <div class="header"><h1>Pengaturan Profil</h1></div>
+            <div class="card">
+                <p>Status Kemahiran: <span id="user-rank" class="status-tag">Beginner</span></p>
+                <button class="btn" style="color: red; border-color: red;" onclick="handleLogout()">Logout</button>
+            </div>
         </div>
 
-            
+
             <div id="page-chat" class="page">
                 <div class="header"><h1>Chat Room</h1></div>
                 <select id="room-selector" onchange="changeRoom(this.value)">
@@ -129,7 +167,7 @@
         </div>
     </div>
 
-        
+
 
 
     <div class="right-panel">
@@ -160,7 +198,7 @@
 
 </div>
 
-        
+
 <script src="script.js"></script>
 </body>
 </html>

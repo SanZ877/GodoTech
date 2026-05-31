@@ -77,6 +77,16 @@ app.post('/login', (req, res) => {
     });
 });
 
+app.post('/signup', (req, res) => {
+    const { username, email, password, role } = req.body;
+    db.run(`INSERT INTO users (username, email, password, role, skill_level) VALUES (?, ?, ?, ?, ?)`,
+        [username, email, password, role, 'Beginner'],
+        function(err) {
+            if (err) return res.status(500).json({ error: "Gagal register: " + err.message });
+            res.json({ userId: this.lastID, username });
+        });
+});
+
 // GET all users
 app.get('/users', (req, res) => {
     db.all(`SELECT * FROM users`, [], (err, rows) => {

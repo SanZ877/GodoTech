@@ -158,35 +158,45 @@ document.querySelectorAll('.filter-btn').forEach(btn => {
 
 init();
 
-db.serialize(() => {
-    // Pastikan tabel ada
-    db.run(`CREATE TABLE IF NOT EXISTS users (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        username TEXT,
-        email TEXT,
-        skill_level TEXT,
-        project_title TEXT
-    )`);
+// Logout Logic
+function handleLogout() {
+    localStorage.removeItem('userId');
+    location.reload();
+}
 
-    // Tambahkan kolom jika belum ada (mengabaikan error jika kolom sudah ada)
-    const columns = ['password', 'role', 'project_count'];
-    columns.forEach(col => {
-        db.run(`ALTER TABLE users ADD COLUMN ${col} TEXT`, (err) => {
-            if (err) console.log(`Kolom ${col} mungkin sudah ada atau terjadi kesalahan.`);
-        });
+// Toggle Login/Register
+const container = document.querySelector('.container');
+const registerBtn = document.querySelector('.register-btn');
+const loginBtn = document.querySelector('.login-btn');
+
+if (container && registerBtn && loginBtn) {
+    registerBtn.addEventListener('click', () => {
+        container.classList.add('active');
+    });
+    loginBtn.addEventListener('click', () => {
+        container.classList.remove('active');
+});
+}
+
+// Signup Logic
+document.getElementById('register-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const username = document.getElementById('reg-user').value;
+    const email = document.getElementById('reg-email').value;
+    const password = document.getElementById('reg-pass').value;
+    const role = document.getElementById('reg-role').value;
+
+    const res = await fetch('http://localhost:3000/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, email, password, role })
     });
 
-    // Update data sampel setelah kolom dipastikan ada
-    db.get(`SELECT COUNT(*) as count FROM users`, (err, row) => {
-        if (row && row.count < 5) {
-            const stmt = db.prepare(`INSERT OR IGNORE INTO users (username, email, skill_level, project_title, password, role, project_count) VALUES (?, ?, ?, ?, ?, ?, ?)`);
-            stmt.run("GodotNewbie", "newbie@example.com", "Beginner", "First Platformer", "123", "Programmer", 1);
-            stmt.run("Artist2D", "art2d@godotech.com", "Beginner", "Pixel Art Pack", "123", "2D Artist", 1);
-            stmt.run("Artist3D", "art3d@godotech.com", "Intermediate", "Low Poly Assets", "123", "3D Artist", 5);
-            stmt.run("SoundDev", "sound@godotech.com", "Expert", "Godot SFX", "123", "Sound Designer", 12);
-            stmt.finalize();
-            console.log("Sample users updated/inserted.");
-        }
-    });
+    if (res.ok) {
+        alert("Register Berhasil! Silakan Login.");
+        container.classList.remove('active');
+    } else {
+        alert("Gagal Register.");
+    }
 });
 
