@@ -20,7 +20,11 @@ async function loadMessages() {
     const chatContainer = document.getElementById('chat-messages');
     if (!chatContainer) return;
 
-    const res = await fetch(`http://localhost:3000/messages/${currentRoom}`);
+    // Catat posisi scroll sebelum data baru masuk
+    // Cek apakah user sedang berada di posisi paling bawah (diberi toleransi 50px)
+    const isAtBottom = chatContainer.scrollHeight - chatContainer.clientHeight - chatContainer.scrollTop < 50;
+
+    const res = await fetch(`/messages/${currentRoom}`);
     const messages = await res.json();
 
     chatContainer.innerHTML = messages.map(m => `
@@ -34,7 +38,11 @@ async function loadMessages() {
             </div>
         </div>
     `).join('');
-    chatContainer.scrollTop = chatContainer.scrollHeight;
+    
+    // Jika posisi sebelumnya di paling bawah, atau chat baru pertama kali dimuat (scrollTop masih 0)
+    if (isAtBottom || chatContainer.scrollTop === 0) {
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
 }
 
 function changeRoom(roomId) {
@@ -48,7 +56,7 @@ document.getElementById('chat-form').addEventListener('submit', async (e) => {
     const content = input.value;
     if (!content) return;
 
-    await fetch('http://localhost:3000/messages', {
+    await fetch('/messages', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId: localStorage.getItem('userId'), roomId: currentRoom, content })
@@ -74,7 +82,7 @@ function updateRank(projectCount) {
 async function handleLogin() {
     const user = document.getElementById('login-user').value;
     const pass = document.getElementById('login-pass').value;
-    const res = await fetch('http://localhost:3000/login', {
+    const res = await fetch('/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username: user, password: pass })
@@ -108,7 +116,7 @@ async function loadProjects() {
     const container = document.getElementById('dashboard-projects');
     if (!container) return; // Mencegah error jika elemen tidak ditemukan
     try {
-        const res = await fetch('http://localhost:3000/projects');
+        const res = await fetch('/projects');
         const projects = await res.json();
         container.innerHTML = projects.map(p => `
             <div class="card">
@@ -128,7 +136,7 @@ async function loadMatchmaking(role = 'all') {
     if (!container) return; // Mencegah error jika elemen tidak ditemukan
 
     try {
-        const res = await fetch(`http://localhost:3000/matchmaking/${role}`);
+        const res = await fetch(`/matchmaking/${role}`);
         const talents = await res.json();
 
         if (talents.length === 0) {
@@ -186,7 +194,7 @@ document.getElementById('register-form').addEventListener('submit', async (e) =>
     const password = document.getElementById('reg-pass').value;
     const role = document.getElementById('reg-role').value;
 
-    const res = await fetch('http://localhost:3000/signup', {
+    const res = await fetch('/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, email, password, role })

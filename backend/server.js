@@ -2,6 +2,7 @@ const express = require('express');
 const sqlite3 = require('sqlite3').verbose();
 const cors = require('cors');
 
+const path = require('path');
 const app = express();
 const PORT = 3000;
 
@@ -137,7 +138,9 @@ app.post('/messages', (req, res) => {
     });
 });
 
+// Cukup pasang ini agar Express otomatis membaca folder frontend kamu
+app.use(express.static(path.join(__dirname, '../frontend')));
+
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
 });
-
