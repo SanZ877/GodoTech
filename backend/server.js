@@ -15,60 +15,8 @@ const db = new sqlite3.Database('./godot_community.db', (err) => {
     console.log('Connected to the godot_community database.');
 });
 
-// Update tables and insert sample data
-db.serialize(() => {
-    db.run(`CREATE TABLE IF NOT EXISTS users (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        username TEXT,
-        email TEXT,
-        skill_level TEXT,
-        project_title TEXT,
-        password TEXT DEFAULT '123',
-        role TEXT DEFAULT 'Programmer',
-        project_count INTEGER DEFAULT 0
-    )`);
-
-    // Tambahkan tabel projects di db.serialize
-    db.run(`CREATE TABLE IF NOT EXISTS projects (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        user_id INTEGER,
-        title TEXT,
-        description TEXT,
-        genre TEXT,
-        status TEXT
-    )`);
-
-    db.run(`CREATE TABLE IF NOT EXISTS messages (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        user_id INTEGER,
-        room_id TEXT DEFAULT 'global',
-        content TEXT,
-        timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
-    )`);
-
-    db.run(`CREATE TABLE IF NOT EXISTS rooms (
-        id TEXT PRIMARY KEY,
-        name TEXT
-    )`);
-
-    db.run(`INSERT OR IGNORE INTO rooms (id, name) VALUES ('global', 'Global'), ('programmer', 'Programmer'), ('artist', 'Artist')`);
-
-    // Check if sample data exists, if not, add it
-    db.get(`SELECT COUNT(*) as count FROM users`, (err, row) => {
-        if (row.count < 5) {
-            const stmt = db.prepare(`INSERT OR IGNORE INTO users (username, email, skill_level, project_title, role, project_count) VALUES (?, ?, ?, ?, ?, ?)`);
-            stmt.run("GodotNewbie", "newbie@example.com", "Beginner", "First Platformer", "Programmer", 1);
-            stmt.run("GodoDev", "dev@example.com", "Intermediate", "2D RPG Engine", "Programmer", 5);
-            stmt.run("MasterGodot", "master@example.com", "Expert", "3D Open World RPG", "Programmer", 12);
-            stmt.run("Artist2D", "art2d@godotech.com", "Beginner", "Pixel Art Pack", "2D Artist", 1);
-            stmt.run("Artist3D", "art3d@godotech.com", "Intermediate", "Low Poly Assets", "3D Artist", 5);
-            stmt.run("SoundDev", "sound@godotech.com", "Expert", "Godot SFX", "Sound Designer", 12);
-            stmt.finalize();
-            console.log("Sample users inserted.");
-        }
-    });
-});
-
+// Server sudah siap tanpa inisialisasi tabel di sini
+// Semua tabel dan data sampel sekarang dikelola oleh seed_data.js
 // Login route
 app.post('/login', (req, res) => {
     const { username, password } = req.body;
